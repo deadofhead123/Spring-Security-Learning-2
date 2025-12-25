@@ -24,8 +24,7 @@ public class ResourceServiceImpl implements ResourceService {
 
         return switch (type) {
             case SystemConst.ResourceType.BLOG -> {
-                BlogEntity blog = blogRepository.findById(id)
-                        .orElseThrow(() -> new DataNotFoundException("Resource not found"));
+                BlogEntity blog = blogRepository.findById(id).orElseThrow(() -> new DataNotFoundException("Resource not found"));
 
                 ResourceEntity resource = resourceRepository.findByIdAndType(blog.getResourceId(), SystemConst.ResourceType.BLOG);
 

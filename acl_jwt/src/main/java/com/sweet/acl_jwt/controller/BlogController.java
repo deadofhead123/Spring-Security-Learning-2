@@ -2,6 +2,7 @@ package com.sweet.acl_jwt.controller;
 
 import com.sweet.acl_jwt.constant.RequestMatcherConst;
 import com.sweet.acl_jwt.constant.RoleEnum;
+import com.sweet.acl_jwt.dto.BlogDto;
 import com.sweet.acl_jwt.dto.ResponseDto;
 import com.sweet.acl_jwt.dto.request.BlogRequest;
 import com.sweet.acl_jwt.service.BlogService;
@@ -33,7 +34,7 @@ public class BlogController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("permitAll()")
     @GetMapping
     public ResponseEntity<?> readBlog(@RequestBody BlogRequest blogRequest) {
         ResponseDto responseDto = new ResponseDto();
@@ -48,20 +49,21 @@ public class BlogController {
         }
     }
 
-//    @PreAuthorize("hasAnyRole('ADMIN','USER') and @abac.check('BLOG', 'UPDATE', #id, authentication)")
-//    @PutMapping("/{id}")
-//    public ResponseEntity<?> updateBlog(@PathVariable Long id, @RequestBody PostEntity p) {
-//        ResponseDto responseDto = new ResponseDto();
-//
-//        try{
-////            responseDto.setData(blogService.createBlog(blogRequest));
-//            return ResponseEntity.ok(responseDto);
-//        }
-//        catch (Exception e){
-//            responseDto.setMessage(e.getMessage());
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
-//        }
-//    }
+    // Kiểm tra sao cho chỉ người tạo ra mới được sửa bài
+    @PreAuthorize("@abac.check('BLOG', 'UPDATE', #id)")
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBlog(@PathVariable Long id, BlogDto blogDto) {
+        ResponseDto responseDto = new ResponseDto();
+
+        try{
+//            responseDto.setData(blogService.createBlog(blogRequest));
+            return ResponseEntity.ok(responseDto);
+        }
+        catch (Exception e){
+            responseDto.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
+        }
+    }
 //
 //    @DeleteMapping("/{id}")
 //    public void del(@PathVariable Long id) {

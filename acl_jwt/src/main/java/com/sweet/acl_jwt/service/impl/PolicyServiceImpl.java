@@ -43,8 +43,7 @@ public class PolicyServiceImpl implements PolicyService {
             UserEntity user = dummyUser();
             ResourceEntity resource = dummyResource();
 
-            StandardEvaluationContext ctx =
-                    new StandardEvaluationContext();
+            StandardEvaluationContext ctx = new StandardEvaluationContext();
 
             ctx.setVariable("user", user);
             ctx.setVariable("resource", resource);
@@ -52,13 +51,10 @@ public class PolicyServiceImpl implements PolicyService {
             Boolean result = parser.parseExpression(expression).getValue(ctx, Boolean.class);
 
             if (result == null) {
-                throw new IllegalArgumentException(
-                        "Expression does not return boolean");
+                throw new IllegalArgumentException("Expression does not return boolean");
             }
-
         } catch (ParseException | EvaluationException ex) {
-            throw new IllegalArgumentException(
-                    "Invalid condition expression: " + ex.getMessage(), ex);
+            throw new IllegalArgumentException("Invalid condition expression: " + ex.getMessage(), ex);
         }
     }
 
