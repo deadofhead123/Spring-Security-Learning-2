@@ -24,7 +24,7 @@ public class UserEntity extends BaseEntity implements UserDetails{
     @Column(name = "password")
     String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),

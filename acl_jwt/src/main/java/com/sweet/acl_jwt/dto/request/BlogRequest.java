@@ -8,7 +8,6 @@ import lombok.Setter;
 public class BlogRequest {
     private String title;
     private String content;
-    private Long ownerId;
     private String status;
     private String type;
 }

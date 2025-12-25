@@ -3,7 +3,9 @@ package com.sweet.acl_jwt.constant;
 public class RequestMatcherConst {
     public static class API {
         public static final String AUTH = "/auth/**";
-
+        public static final String BLOG = "/blogs";
+        public static final String USER = "/users";
+        public static final String POLICY = "/policies";
     }
 
     public static class Method {

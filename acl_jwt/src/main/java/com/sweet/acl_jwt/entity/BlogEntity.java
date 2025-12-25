@@ -25,4 +25,7 @@ public class BlogEntity extends BaseEntity {
 
     @Column(name = "type", length = 100)
     private String type;
+
+    @Column(name = "resource_id", length = 100)
+    private Long resourceId;
 }

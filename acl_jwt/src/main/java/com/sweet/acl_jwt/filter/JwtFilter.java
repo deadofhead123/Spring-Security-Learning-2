@@ -41,11 +41,11 @@ public class JwtFilter extends OncePerRequestFilter {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
                 return;
             }
+
             final String token = authHeader.substring(7);
-            final String phoneNumber = jwtUtil.extractUsername(token);
-            if (phoneNumber != null
-                    && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserEntity userDetails = (UserEntity) customUserDetailsService.loadUserByUsername(phoneNumber);
+            final String username = jwtUtil.extractUsername(token);
+            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserEntity userDetails = (UserEntity) customUserDetailsService.loadUserByUsername(username);
                 if(jwtUtil.validateToken(token, userDetails)) {
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(
@@ -57,7 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 }
             }
-            filterChain.doFilter(request, response); //enable bypass
+            filterChain.doFilter(request, response); // enable bypass
         }
         catch (Exception ex){
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid token");

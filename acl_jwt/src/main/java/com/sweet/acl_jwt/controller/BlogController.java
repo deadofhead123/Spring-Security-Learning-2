@@ -1,22 +1,24 @@
 package com.sweet.acl_jwt.controller;
 
+import com.sweet.acl_jwt.constant.RequestMatcherConst;
+import com.sweet.acl_jwt.constant.RoleEnum;
 import com.sweet.acl_jwt.dto.ResponseDto;
 import com.sweet.acl_jwt.dto.request.BlogRequest;
 import com.sweet.acl_jwt.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/blogs")
+@RequestMapping(RequestMatcherConst.API.BLOG)
 public class BlogController {
     private final BlogService blogService;
+    private RoleEnum roleEnum;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping
     public ResponseEntity<?> createBlog(@RequestBody BlogRequest blogRequest) {
         ResponseDto responseDto = new ResponseDto();
@@ -31,17 +33,34 @@ public class BlogController {
         }
     }
 
-//    @GetMapping
-//    public List<PostEntity> all() {
-//        return repo.findAll();
-//    }
-//
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @GetMapping
+    public ResponseEntity<?> readBlog(@RequestBody BlogRequest blogRequest) {
+        ResponseDto responseDto = new ResponseDto();
+
+        try{
+            responseDto.setData(blogService.createBlog(blogRequest));
+            return ResponseEntity.ok(responseDto);
+        }
+        catch (Exception e){
+            responseDto.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
+        }
+    }
+
+//    @PreAuthorize("hasAnyRole('ADMIN','USER') and @abac.check('BLOG', 'UPDATE', #id, authentication)")
 //    @PutMapping("/{id}")
-//    public PostEntity update(@PathVariable Long id, @RequestBody PostEntity p) {
-//        PostEntity db = repo.findById(id).orElseThrow();
-//        db.setTitle(p.getTitle());
-//        db.setContent(p.getContent());
-//        return repo.save(db);
+//    public ResponseEntity<?> updateBlog(@PathVariable Long id, @RequestBody PostEntity p) {
+//        ResponseDto responseDto = new ResponseDto();
+//
+//        try{
+////            responseDto.setData(blogService.createBlog(blogRequest));
+//            return ResponseEntity.ok(responseDto);
+//        }
+//        catch (Exception e){
+//            responseDto.setMessage(e.getMessage());
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
+//        }
 //    }
 //
 //    @DeleteMapping("/{id}")

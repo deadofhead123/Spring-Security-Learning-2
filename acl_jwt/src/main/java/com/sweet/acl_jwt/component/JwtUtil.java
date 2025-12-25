@@ -23,7 +23,7 @@ public class JwtUtil {
         try{
             return Jwts.builder()
                     .setSubject(username)
-                    .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                    .setExpiration(new Date(System.currentTimeMillis() * 1000L + expiration))
                     .signWith(createSecretKey(), SignatureAlgorithm.HS256) // need bytes (convert from secretKey)
                     .compact();
         }
@@ -41,13 +41,15 @@ public class JwtUtil {
         try{
             // Sử dụng secretKey để giải mã token, rồi lây dữ liệu ra
             return Jwts.parserBuilder()
-                    .setSigningKey(secretKey.getBytes())
+                    .setSigningKey(createSecretKey()) // Tại sao phải createSecretKey() ? Vì lúc tạo cũng dùng Key chứ ko phải byte[]
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
         }
-        catch (SignatureException se){
+        catch (SignatureException ex){
             throw new JwtException("invalid token signature");
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
     }
 

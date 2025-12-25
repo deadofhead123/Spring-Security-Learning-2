@@ -102,5 +102,7 @@ CREATE TABLE grants
     updated_user    varchar(255)
 );
 
+
+ALTER TABLE blogs ADD COLUMN resource_id BIGINT AFTER type;
 select *
 from roles;
