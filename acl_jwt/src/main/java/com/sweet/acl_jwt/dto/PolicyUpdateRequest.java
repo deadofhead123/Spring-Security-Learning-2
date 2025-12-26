@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PolicyDto {
+public class PolicyUpdateRequest {
     private Long id;
     private String resourceType;
     private String action;

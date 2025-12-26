@@ -13,7 +13,7 @@ public class RequestMatcherConst {
     }
 
     public static class BypassAPI {
-        public static final String LOGIN = "/auth/login";
-        public static final String REGISTER = "/auth/register";
+        public static final String LOGIN = "/users/login";
+        public static final String REGISTER = "/users/register";
     }
 }

@@ -1,6 +1,7 @@
 package com.sweet.acl_jwt.controller;
 
 import com.sweet.acl_jwt.constant.RequestMatcherConst;
+import com.sweet.acl_jwt.dto.PolicyUpdateRequest;
 import com.sweet.acl_jwt.dto.ResponseDto;
 import com.sweet.acl_jwt.dto.request.PolicyRequest;
 import com.sweet.acl_jwt.service.PolicyService;
@@ -8,10 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(RequestMatcherConst.API.POLICY)
@@ -26,6 +24,22 @@ public class PolicyController {
 
         try{
             responseDto.setData(policyService.createPolicy(policyRequest));
+            return ResponseEntity.ok(responseDto);
+        }
+        catch (Exception e){
+            responseDto.setMessage(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDto);
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping
+    public ResponseEntity<?> updatePolicy(@RequestBody PolicyUpdateRequest policyUpdateRequest) {
+        ResponseDto responseDto = new ResponseDto();
+
+        try{
+            responseDto.setData(policyService.updatePolicy(policyUpdateRequest));
+            responseDto.setMessage(String.format("Policy with id = %d updated successfully", policyUpdateRequest.getId()));
             return ResponseEntity.ok(responseDto);
         }
         catch (Exception e){

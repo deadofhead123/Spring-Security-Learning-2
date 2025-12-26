@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 @Component("abac")
 @RequiredArgsConstructor
 public class AbacSecurity {
-
     private final AuthorizationService authorizationService;
     private final ResourceService resourceService;
 
@@ -20,10 +19,6 @@ public class AbacSecurity {
 
         ResourceEntity resource = resourceService.load(resourceType, entityId);
 
-        return authorizationService.authorize(
-            cud,
-            resource,
-            action
-        );
+        return authorizationService.authorize(cud, resource, action);
     }
 }

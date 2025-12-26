@@ -23,7 +23,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public boolean authorize(UserEntity user, ResourceEntity resource, String action) {
-
         // Grant override
         if (grantRepo.existsValidGrant(user.getId(), resource.getId(), action)) {
             return true;

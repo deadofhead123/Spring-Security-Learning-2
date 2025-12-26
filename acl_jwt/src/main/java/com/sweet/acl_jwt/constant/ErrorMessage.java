@@ -10,4 +10,8 @@ public class ErrorMessage {
         public static final String ROLE_NOT_FOUND = "Role not found";
         public static final String ROLE_EXISTED = "Role existed";
     }
+
+    public static class Policy {
+        public static final String POLICY_NOT_FOUND = "Policy not found";
+    }
 }

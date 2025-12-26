@@ -1,10 +1,13 @@
 package com.sweet.acl_jwt.service.impl;
 
+import com.sweet.acl_jwt.constant.ErrorMessage;
 import com.sweet.acl_jwt.dto.PolicyDto;
+import com.sweet.acl_jwt.dto.PolicyUpdateRequest;
 import com.sweet.acl_jwt.dto.request.PolicyRequest;
 import com.sweet.acl_jwt.entity.PolicyEntity;
 import com.sweet.acl_jwt.entity.ResourceEntity;
 import com.sweet.acl_jwt.entity.UserEntity;
+import com.sweet.acl_jwt.exception.PolicyNotFoundException;
 import com.sweet.acl_jwt.repo.PolicyRepository;
 import com.sweet.acl_jwt.service.PolicyService;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +34,22 @@ public class PolicyServiceImpl implements PolicyService {
 
         // Validate condition expression
         String conditionExpression = policyRequest.getConditionExpression();
+        validate(conditionExpression);
+        policyEntity.setConditionExpression(conditionExpression);
+
+        return modelMapper.map(policyRepository.save(policyEntity), PolicyDto.class);
+    }
+
+    @Override
+    public PolicyDto updatePolicy(PolicyUpdateRequest policyUpdateRequest) {
+        PolicyEntity policyEntity = policyRepository.findById(policyUpdateRequest.getId())
+                .orElseThrow(() -> new PolicyNotFoundException(ErrorMessage.Policy.POLICY_NOT_FOUND));
+
+        policyEntity.setAction(policyUpdateRequest.getAction());
+        policyEntity.setResourceType(policyUpdateRequest.getResourceType());
+
+        // Validate condition expression
+        String conditionExpression = policyUpdateRequest.getConditionExpression();
         validate(conditionExpression);
         policyEntity.setConditionExpression(conditionExpression);
 
