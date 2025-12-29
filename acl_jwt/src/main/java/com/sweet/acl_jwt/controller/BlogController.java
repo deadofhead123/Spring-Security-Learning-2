@@ -54,7 +54,7 @@ public class BlogController {
     }
 
     // Kiểm tra sao cho chỉ người tạo ra mới được sửa bài
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN') && @abac.check('BLOG', 'UPDATE', {#id})")
+    @PreAuthorize("@abac.check('BLOG', 'UPDATE', {#id})")
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBlog(@PathVariable Long id, @RequestBody BlogRequest blogRequest) {
         ResponseDto responseDto = new ResponseDto();
@@ -70,14 +70,14 @@ public class BlogController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN') && @abac.check('BLOG', 'GRANT', {#grantRequest.resourceId})")
+    @PreAuthorize("@abac.check('BLOG', 'GRANT', {#grantRequest.resourceId})")
     @PostMapping("/grant")
     public ResponseEntity<?> grantBlogForRead(@RequestBody GrantRequest grantRequest) {
         ResponseDto responseDto = new ResponseDto();
 
         try{
             responseDto.setData(grantService.createGrant(grantRequest));
-            responseDto.setMessage("Blog granted for user with id = " + grantRequest.getUserGrantedId() + " successfully");
+            responseDto.setMessage("Blog granted for user with id = " + grantRequest.getUserGrantedIds().toString() + " successfully");
             return ResponseEntity.ok(responseDto);
         }
         catch (Exception e){
@@ -86,7 +86,7 @@ public class BlogController {
         }
     }
 
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN') && #ids != null &&  @abac.check('BLOG', 'DELETE', #ids)")
+    @PreAuthorize("#ids != null &&  @abac.check('BLOG', 'DELETE', #ids)")
     @DeleteMapping("/{ids}")
     public ResponseEntity<?> deleteBlog(@PathVariable List<Long> ids) {
         ResponseDto responseDto = new ResponseDto();

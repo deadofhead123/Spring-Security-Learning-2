@@ -2,7 +2,6 @@ package com.sweet.acl_jwt.service.impl;
 
 import com.sweet.acl_jwt.constant.ErrorMessage;
 import com.sweet.acl_jwt.dto.BlogDto;
-import com.sweet.acl_jwt.dto.ResourceDto;
 import com.sweet.acl_jwt.dto.request.blog.BlogRequest;
 import com.sweet.acl_jwt.entity.BlogEntity;
 import com.sweet.acl_jwt.entity.ResourceEntity;
@@ -35,7 +34,8 @@ public class BlogServiceImpl implements BlogService {
         blogEntity.setOwnerId(PrincipalUtil.getPrincipal().getId());
         BlogEntity blogEntitySaved = blogRepository.save(blogEntity);
 
-        blogEntitySaved.setResourceId(createResourceEntityFromBlog(blogRequest.getResourceVisibility().toString()).getId());
+        ResourceEntity resourceEntity = resourceService.createResource(ResourceTypeEnum.BLOG.toString(), blogRequest.getResourceVisibility().toString());
+        blogEntitySaved.setResourceId(resourceEntity.getId());
         blogRepository.save(blogEntitySaved);
 
         return modelMapper.map(blogEntitySaved, BlogDto.class);
@@ -70,11 +70,18 @@ public class BlogServiceImpl implements BlogService {
         return modelMapper.map(blogEntity, BlogDto.class);
     }
 
-    private ResourceEntity createResourceEntityFromBlog(String resourceVisibility){
-        ResourceDto resourceDto = new ResourceDto();
-        resourceDto.setOwnerId(PrincipalUtil.getPrincipal().getId());
-        resourceDto.setType(ResourceTypeEnum.BLOG.toString());
-        resourceDto.setVisibility(resourceVisibility);
-        return resourceService.createResource(resourceDto);
+    @Override
+    public BlogEntity findById(Long id) {
+        return blogRepository.findByIdAndIsDeleted(id, false).orElseThrow(() -> new BlogNotFoundException(ErrorMessage.Blog.BLOG_NOT_FOUND));
+    }
+
+    @Override
+    public BlogEntity findByResourceId(Long resourceId) {
+        return blogRepository.findByResourceIdAndIsDeleted(resourceId, false).orElseThrow(() -> new BlogNotFoundException(ErrorMessage.Blog.BLOG_NOT_FOUND));
+    }
+
+    @Override
+    public List<BlogEntity> findAllById(List<Long> ids) {
+        return blogRepository.findAllByIdAndIsDeleted(ids, false);
     }
 }

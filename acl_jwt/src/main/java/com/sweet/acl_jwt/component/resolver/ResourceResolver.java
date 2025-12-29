@@ -12,12 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ResourceResolver {
     private final BlogAttributeResolver blogAttributeResolver;
+    private final VideoAttributeResolver videoAttributeResolver;
 
     public ResourceAttributeDto load(ResourceTypeEnum type, PolicyAction action, List<Long> ids) {
         return switch (type) {
             case BLOG -> blogAttributeResolver.load(type.toString(), action, ids);
 
-            case COMMENT -> null;
+            case VIDEO -> videoAttributeResolver.load(type.toString(), action, ids);
 
             default -> throw new IllegalArgumentException(
                     "Unsupported resource type: " + type

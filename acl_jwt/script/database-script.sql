@@ -105,15 +105,21 @@ CREATE TABLE grants
 create table videos
 (
     id           bigint primary key auto_increment,
+    title        VARCHAR(255),
+    description  TEXT,
     link         varchar(255),
     owner_id     bigint,
     type         VARCHAR(100), -- NORMAL, PREMIUM
+    resource_id  BIGINT,
+    is_deleted   BOOLEAN DEFAULT false,
     created_time datetime,
     created_user varchar(255),
     updated_time datetime,
     updated_user varchar(255)
 );
 
-ALTER TABLE blogs ADD COLUMN resource_id BIGINT AFTER type;
+drop table videos;
+ALTER TABLE blogs
+    ADD COLUMN resource_id BIGINT AFTER type;
 select *
-from roles;
+from videos;

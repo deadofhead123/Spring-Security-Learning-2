@@ -3,7 +3,7 @@ package com.sweet.acl_jwt.service.impl;
 import com.sweet.acl_jwt.constant.ErrorMessage;
 import com.sweet.acl_jwt.dto.PolicyDto;
 import com.sweet.acl_jwt.dto.PolicyUpdateRequest;
-import com.sweet.acl_jwt.dto.record.blog.BlogDeleteAttributes;
+import com.sweet.acl_jwt.dto.record.video.VideoDeleteAttribute;
 import com.sweet.acl_jwt.dto.request.PolicyRequest;
 import com.sweet.acl_jwt.entity.PolicyEntity;
 import com.sweet.acl_jwt.entity.UserEntity;
@@ -87,8 +87,8 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     private Object dummyResource() {
-        return new BlogDeleteAttributes(
-                1L
+        return new VideoDeleteAttribute(
+            1L
         );
     }
 }

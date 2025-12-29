@@ -5,11 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import java.util.List;
+
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class GrantRequest {
     Long resourceId;
-    Long userGrantedId;
+    List<Long> userGrantedIds;
     String action;
 }

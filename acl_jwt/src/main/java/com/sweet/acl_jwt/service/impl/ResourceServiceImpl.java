@@ -1,12 +1,13 @@
 package com.sweet.acl_jwt.service.impl;
 
 import com.sweet.acl_jwt.constant.ErrorMessage;
-import com.sweet.acl_jwt.dto.ResourceDto;
 import com.sweet.acl_jwt.entity.ResourceEntity;
+import com.sweet.acl_jwt.exception.DataNotFoundException;
 import com.sweet.acl_jwt.exception.ResourceNotFoundException;
 import com.sweet.acl_jwt.repo.BlogRepository;
 import com.sweet.acl_jwt.repo.ResourceRepository;
 import com.sweet.acl_jwt.service.ResourceService;
+import com.sweet.acl_jwt.util.PrincipalUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -21,9 +22,12 @@ public class ResourceServiceImpl implements ResourceService {
 
     @Override
     @Transactional
-    public ResourceEntity createResource(ResourceDto resourceDto) {
-        ResourceEntity resource = modelMapper.map(resourceDto, ResourceEntity.class);
+    public ResourceEntity createResource(String resourceType, String resourceVisibility) {
+        ResourceEntity resource = new ResourceEntity();
         resource.setId(null);
+        resource.setType(resourceType);
+        resource.setVisibility(resourceVisibility);
+        resource.setOwnerId(PrincipalUtil.getPrincipal().getId());
         return resourceRepository.save(resource);
     }
 
@@ -34,5 +38,10 @@ public class ResourceServiceImpl implements ResourceService {
                                           .orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.Resource.RESOURCE_NOT_FOUND));
         existingResource.setVisibility(resourceVisibility);
         return resourceRepository.save(existingResource);
+    }
+
+    @Override
+    public ResourceEntity findById(Long id) {
+        return resourceRepository.findById(id).orElseThrow(() -> new DataNotFoundException(ErrorMessage.Resource.RESOURCE_NOT_FOUND));
     }
 }

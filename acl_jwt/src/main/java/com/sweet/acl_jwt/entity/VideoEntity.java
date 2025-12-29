@@ -1,28 +1,29 @@
 package com.sweet.acl_jwt.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.ColumnDefault;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "blogs")
+@Table(name = "videos")
 @AttributeOverride(name = "id", column = @Column(nullable = false))
-public class BlogEntity extends BaseEntity {
+public class VideoEntity extends BaseEntity {
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "title")
     private String title;
 
-    @Lob
-    @Column(name = "content")
-    private String content;
+    @Column(name = "link")
+    private String link;
 
     @Column(name = "owner_id")
     private Long ownerId;
-
-    @Column(name = "status", length = 100)
-    private String status;
 
     @Column(name = "type", length = 100)
     private String type;
@@ -30,7 +31,6 @@ public class BlogEntity extends BaseEntity {
     @Column(name = "resource_id")
     private Long resourceId;
 
-    @ColumnDefault(value = "false")
     @Column(name = "is_deleted")
-    private Boolean isDeleted = false;
+    private Boolean isDeleted  = false;
 }

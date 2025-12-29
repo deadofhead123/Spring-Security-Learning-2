@@ -1,0 +1,3 @@
+29-12-2025:
+- Nếu dùng return switch thì bên trong từng case của switch, muốn trả về giá trị cần dùng yield,
+còn nếu không dùng yield mà vẫn cần return thì cứ return bình thường ở trong case.

@@ -12,6 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class GrantServiceImpl implements GrantService {
@@ -21,14 +24,29 @@ public class GrantServiceImpl implements GrantService {
     @Override
     @Transactional
     public GrantDto createGrant(GrantRequest grantRequest) {
-        GrantEntity existingGrant = grantRepository.existsValidGrantEntity(grantRequest.getUserGrantedId(), grantRequest.getResourceId(), grantRequest.getAction());
-        if(existingGrant != null) {
+        List<Long> userGrantedIds = grantRequest.getUserGrantedIds();
+        List<GrantEntity> existingGrant = grantRepository.existsValidGrantEntities(grantRequest.getUserGrantedIds(),
+                                                                                    grantRequest.getResourceId(), grantRequest.getAction());
+        if(existingGrant.size() != 0) {
             throw new GrantExistedException(ErrorMessage.Grant.GRANT_EXISTED);
         }
 
-        GrantEntity grantEntity = modelMapper.map(grantRequest, GrantEntity.class);
-        grantEntity.setId(null);
+        List<GrantEntity> grantList = new ArrayList<>();
+        for(Long id : userGrantedIds) {
+            GrantEntity grantEntity = new GrantEntity();
+            grantEntity.setResourceId(grantRequest.getResourceId());
+            grantEntity.setAction(grantRequest.getAction());
+            grantEntity.setUserGrantedId(id);
+            grantList.add(grantEntity);
+        }
 
-        return modelMapper.map(grantRepository.save(grantEntity), GrantDto.class);
+        grantRepository.saveAll(grantList);
+
+        GrantDto grantDto = new GrantDto();
+        grantDto.setUserGrantedIds(userGrantedIds);
+        grantDto.setResourceId(grantRequest.getResourceId());
+        grantDto.setAction(grantRequest.getAction());
+
+        return grantDto;
     }
 }

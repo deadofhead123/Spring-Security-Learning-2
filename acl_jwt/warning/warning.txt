@@ -1,0 +1,2 @@
+30 - 12 - 2025
+- Phần xóa thì đang để có thể xóa cả phần tử có isDeleted = 1, như vậy có chính xác?
