@@ -28,4 +28,7 @@ public class BlogEntity extends BaseEntity {
 
     @Column(name = "resource_id", length = 100)
     private Long resourceId;
+
+    @Column(name = "is_deleted", length = 100)
+    private Boolean isDeleted;
 }

@@ -6,6 +6,7 @@ public class RequestMatcherConst {
         public static final String BLOG = "/blogs";
         public static final String USER = "/users";
         public static final String POLICY = "/policies";
+        public static final String VIDEO = "/videos";
     }
 
     public static class Method {

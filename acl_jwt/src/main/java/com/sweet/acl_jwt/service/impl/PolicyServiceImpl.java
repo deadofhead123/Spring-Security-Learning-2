@@ -3,13 +3,14 @@ package com.sweet.acl_jwt.service.impl;
 import com.sweet.acl_jwt.constant.ErrorMessage;
 import com.sweet.acl_jwt.dto.PolicyDto;
 import com.sweet.acl_jwt.dto.PolicyUpdateRequest;
+import com.sweet.acl_jwt.dto.record.blog.BlogDeleteAttributes;
 import com.sweet.acl_jwt.dto.request.PolicyRequest;
 import com.sweet.acl_jwt.entity.PolicyEntity;
-import com.sweet.acl_jwt.entity.ResourceEntity;
 import com.sweet.acl_jwt.entity.UserEntity;
 import com.sweet.acl_jwt.exception.PolicyNotFoundException;
 import com.sweet.acl_jwt.repo.PolicyRepository;
 import com.sweet.acl_jwt.service.PolicyService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.expression.EvaluationException;
@@ -27,6 +28,7 @@ public class PolicyServiceImpl implements PolicyService {
     private final ExpressionParser parser = new SpelExpressionParser();
 
     @Override
+    @Transactional
     public PolicyDto createPolicy(PolicyRequest policyRequest) {
         PolicyEntity policyEntity = new PolicyEntity();
         policyEntity.setAction(policyRequest.getAction());
@@ -41,6 +43,7 @@ public class PolicyServiceImpl implements PolicyService {
     }
 
     @Override
+    @Transactional
     public PolicyDto updatePolicy(PolicyUpdateRequest policyUpdateRequest) {
         PolicyEntity policyEntity = policyRepository.findById(policyUpdateRequest.getId())
                 .orElseThrow(() -> new PolicyNotFoundException(ErrorMessage.Policy.POLICY_NOT_FOUND));
@@ -60,7 +63,7 @@ public class PolicyServiceImpl implements PolicyService {
         try {
             // Dummy data
             UserEntity user = dummyUser();
-            ResourceEntity resource = dummyResource();
+            Object resource = dummyResource();
 
             StandardEvaluationContext ctx = new StandardEvaluationContext();
 
@@ -83,10 +86,9 @@ public class PolicyServiceImpl implements PolicyService {
         return user;
     }
 
-    private ResourceEntity dummyResource() {
-        ResourceEntity resourceEntity = new ResourceEntity();
-        resourceEntity.setOwnerId(1L);
-        resourceEntity.setVisibility("PUBLIC");
-        return resourceEntity;
+    private Object dummyResource() {
+        return new BlogDeleteAttributes(
+                1L
+        );
     }
 }

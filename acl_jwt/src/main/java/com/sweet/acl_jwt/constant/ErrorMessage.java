@@ -14,4 +14,16 @@ public class ErrorMessage {
     public static class Policy {
         public static final String POLICY_NOT_FOUND = "Policy not found";
     }
+
+    public static class Blog {
+        public static final String BLOG_NOT_FOUND = "Blog not found";
+    }
+
+    public static class Resource {
+        public static final String RESOURCE_NOT_FOUND = "Resource not found";
+    }
+
+    public static class Grant {
+        public static final String GRANT_EXISTED = "Grant existed";
+    }
 }

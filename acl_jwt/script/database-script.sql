@@ -102,6 +102,17 @@ CREATE TABLE grants
     updated_user    varchar(255)
 );
 
+create table videos
+(
+    id           bigint primary key auto_increment,
+    link         varchar(255),
+    owner_id     bigint,
+    type         VARCHAR(100), -- NORMAL, PREMIUM
+    created_time datetime,
+    created_user varchar(255),
+    updated_time datetime,
+    updated_user varchar(255)
+);
 
 ALTER TABLE blogs ADD COLUMN resource_id BIGINT AFTER type;
 select *

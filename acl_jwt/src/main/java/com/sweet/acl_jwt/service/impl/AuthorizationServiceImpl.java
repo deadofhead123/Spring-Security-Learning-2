@@ -1,7 +1,8 @@
 package com.sweet.acl_jwt.service.impl;
 
+import com.sweet.acl_jwt.dto.ResourceAttributeDto;
+import com.sweet.acl_jwt.entity.GrantEntity;
 import com.sweet.acl_jwt.entity.PolicyEntity;
-import com.sweet.acl_jwt.entity.ResourceEntity;
 import com.sweet.acl_jwt.entity.UserEntity;
 import com.sweet.acl_jwt.repo.GrantRepository;
 import com.sweet.acl_jwt.repo.PolicyRepository;
@@ -22,16 +23,17 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     private final ExpressionParser parser = new SpelExpressionParser();
 
     @Override
-    public boolean authorize(UserEntity user, ResourceEntity resource, String action) {
+    public boolean authorize(UserEntity user, ResourceAttributeDto resource, String action) {
         // Grant override
-        if (grantRepo.existsValidGrant(user.getId(), resource.getId(), action)) {
+        GrantEntity existingGranted = grantRepo.existsValidGrantEntity(user.getId(), resource.getResourceId(), action);
+        if (existingGranted != null) {
             return true;
         }
 
-        List<PolicyEntity> policies = policyRepo.findByResourceTypeAndAction(resource.getType(), action);
+        List<PolicyEntity> policies = policyRepo.findByResourceTypeAndAction(resource.getResourceType(), action);
 
         for (PolicyEntity p : policies) {
-            if (evaluate(p.getConditionExpression(), user, resource)) {
+            if (evaluate(p.getConditionExpression(), user, resource.getData())) {
                 return true;
             }
         }
@@ -39,7 +41,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
         return false;
     }
 
-    private boolean evaluate(String expr, UserEntity user, ResourceEntity resource) {
+    private boolean evaluate(String expr, UserEntity user, Object resource) {
         StandardEvaluationContext ctx = new StandardEvaluationContext();
         ctx.setVariable("user", user);
         ctx.setVariable("resource", resource);

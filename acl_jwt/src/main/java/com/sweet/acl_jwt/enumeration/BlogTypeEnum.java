@@ -1,4 +1,4 @@
-package com.sweet.acl_jwt.constant;
+package com.sweet.acl_jwt.enumeration;
 
 public enum BlogTypeEnum {
     NORMAL("Thường"),

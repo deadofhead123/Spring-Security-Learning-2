@@ -2,7 +2,7 @@ package com.sweet.acl_jwt.service.impl;
 
 import com.sweet.acl_jwt.component.JwtUtil;
 import com.sweet.acl_jwt.constant.ErrorMessage;
-import com.sweet.acl_jwt.constant.RoleEnum;
+import com.sweet.acl_jwt.enumeration.RoleEnum;
 import com.sweet.acl_jwt.dto.request.GrantRoleRequest;
 import com.sweet.acl_jwt.dto.request.LoginRequest;
 import com.sweet.acl_jwt.dto.request.RegisterRequest;
@@ -13,6 +13,7 @@ import com.sweet.acl_jwt.exception.RoleExistException;
 import com.sweet.acl_jwt.repo.UserRepository;
 import com.sweet.acl_jwt.service.RoleService;
 import com.sweet.acl_jwt.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -66,6 +67,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public RegisterResponse register(RegisterRequest registerRequest) {
         if(userRepository.findByUsername(registerRequest.getUsername()).isPresent()){
             throw new DataIntegrityViolationException("Username existed");

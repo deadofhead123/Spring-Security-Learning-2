@@ -10,7 +10,7 @@ public interface GrantRepository extends JpaRepository<GrantEntity, Long> {
             "WHERE gr.userGrantedId = :userId " +
             "AND gr.resourceId = :resourceId " +
             "AND gr.action = :action ")
-    Boolean existsValidGrant(
+    GrantEntity existsValidGrantEntity(
             @Param("userId") Long userId,
             @Param("resourceId") Long resourceId,
             @Param("action") String action);

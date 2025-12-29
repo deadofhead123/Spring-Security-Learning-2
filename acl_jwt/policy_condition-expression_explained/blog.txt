@@ -1,0 +1,11 @@
+---- giải thích ý nghĩa của biểu thức kiểm tra:
+- BLOG:
++ READ: "#user.id == #resource.ownerId || (#resource.status == 'PUBLISHED' && #resource.resourceVisibility == 'PUBLIC') "
+    -> Chủ bài viết được xem, hoặc nếu ko thì bài viết phải ở trạng thái công khai, và chưa bị xóa thì mới xem được
++ UPDATE: "#user.id == #resource.ownerId"
+    -> Chủ bài viết được xem
++ GRANT: "#user.id == #resource.ownerId && #resource.resourceVisibility == 'INTERNAL'"
+    -> Chủ bài viết có thể cho người khác xem những bài viết nội bộ (bài viết công khai thì cần gì trao quyền xem:))), còn bài viết riêng tư thì bạn tự hiểu nhé).
+
+* Tại sao ko phân action CREATE?
+-> Vì lúc tạo đã có tài nguyên đâu để xác định action :))))

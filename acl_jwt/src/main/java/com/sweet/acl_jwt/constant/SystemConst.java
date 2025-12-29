@@ -6,8 +6,4 @@ public class SystemConst {
         public static final String PREMIUM = "PREMIUM";
         public static final String ADMIN = "ADMIN";
     }
-
-    public static class ResourceType{
-        public static final String BLOG = "BLOG";
-    }
 }
